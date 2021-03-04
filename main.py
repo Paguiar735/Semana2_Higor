@@ -1,4 +1,14 @@
+#
+##
+###
+###############################
+# 1 - Importação de Bibliotecas
+###############################
+###
+##
+#
 
+# Bloco de código importante
 
 import os
 import sys
@@ -44,7 +54,6 @@ def save_CSV(df):
 def main():
   save_CSV(read_spreadsheet(extract_ID()))
 
-
 #
 ##
 ###
@@ -56,7 +65,6 @@ def main():
 #
 
 main()
-
 
 '''
 # operador para contar o sufixo do arquivo
