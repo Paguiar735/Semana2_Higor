@@ -8,15 +8,8 @@
 ##
 #
 
-# Bloco de código importante
-# Outro bloco de código
-
 import os
-import sys
-import itertools
 import pandas as pd
-from urllib.parse import urlparse
-from pathlib import Path
 
 #
 ##
