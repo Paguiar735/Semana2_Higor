@@ -53,6 +53,10 @@ def save_CSV(df):
   completeName = os.path.join(save_path, str(a) + "-FILE" + ".csv")
   df.to_csv (completeName, index = False, header=True)
 
+# Update Database
+def update_file():
+  print("Hello World!")
+
 # Check for duplicate files
 def check_for_duplicates():
   
@@ -61,21 +65,24 @@ def check_for_duplicates():
   os.chdir(dir)
   files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
 
-  before_last = files[-2]
-  before_last_csv = pd.read_csv(os.path.join(dir, before_last))
-  last = files[-1]
-  last_csv = pd.read_csv(os.path.join(dir, last))
+  if files[-1] != "1-FILE.csv": # condicao para rodar a primeira vez sem sondar o                                     # diretorio vazio
 
-  print ("Before last file:  ", before_last)
-  print ("Last file:         ", last)
+    before_last = files[-2]
+    before_last_csv = str(pd.read_csv(os.path.join(dir, before_last)))
+    last = files[-1]
+    last_csv = str(pd.read_csv(os.path.join(dir, last)))
 
-  print(before_last_csv)
-  print(last_csv)
+    print ("Before last file:  ", before_last)
+    print ("Last file:         ", last)
+    print("")
 
-#  if (before_last_csv == last_csv):
-#    print("they are the same")
-#  else:
-#    print("they are different")
+    if (before_last_csv == last_csv):
+      print("they are the same")
+      os.remove(last)
+    else:
+      print("they are different")
+      print("")
+      print("changes saved as ",last)
 
 
 # Iniciar Programa
@@ -98,4 +105,10 @@ main()
 
 # 1 - (x) SALVAR OS ARQUIVOS CSV EM UMA PASTA, NÃO NO MESMO DIRETÓRIO DO ARQUIVO PYTHON
 # 2 - (x) SE ESTIVER COM O MESMO NOME, NÃO SOBRESCREVER, E SIM SALVAR COM OUTRO NOME (PLANILHA_1 -- > PLANILHA_2)
-# 3 - ( ) SE HOUVER MODIFICAÇÕES, SALVAR AS MODIFICAÇÕES EM UM ARQUIVO DE TEXTO
+# 3 - ( ) CRIAR UMA FUNÇÃO PARA DETECTAR SE O ARQUIVO DE ÍNDICE N+1, GERADO NA ÚLTIMA EXECUÇÃO, É INDÊNTICO AO ARQUIVO DE ÍNDICE N, ATRAVÉS DA FUNÇÃO check_for_duplicates().
+# 4 - ( ) CRIAR UMA FUNÇÃO update_file() PARA ATUAR EM DOIS ARQUIVOS, UM DE ÍNDICE N E OUTRO DE ÍNDICE N+1, QUE TENHA O SEGUINTE COMPORTAMENTO:
+#  4-1 ( ) SE O ARQUIVO DE ÍNDICE N+1 FOR IDÊNTICO AO ARQUIVO DE ÍNDICE N, DELETAR O ARQUIVO DE ÍNDICE N+1
+#  4-2 ( ) SE HOUVER ALTERAÇÕES, SALVAR TAIS ALTERAÇÕES EM UM ARQUIVO DE TEXTO SEGUNDO O MODELO:
+#    - Current version: [...]
+#    - Latest version:  [...]
+#  4-3 ( ) CRIAR UMA FUNÇÃO PARA EXIBIR CONTEÚDO DO ARQUIVOD E TEXTO E PERGUNTAR SE O USUÁRIO DESEJA SALVAR A VERSÃO MAIS NOVAS OU DESCARTÁ-LA. 
