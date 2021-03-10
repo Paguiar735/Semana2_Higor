@@ -53,10 +53,35 @@ def save_CSV(df):
   completeName = os.path.join(save_path, str(a) + "-FILE" + ".csv")
   df.to_csv (completeName, index = False, header=True)
 
+# Check for duplicate files
+def check_for_duplicates():
+  
+  dir = os.path.join(os.getcwd(), "Planilhas")
+
+  os.chdir(dir)
+  files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
+
+  before_last = files[-2]
+  before_last_csv = pd.read_csv(os.path.join(dir, before_last))
+  last = files[-1]
+  last_csv = pd.read_csv(os.path.join(dir, last))
+
+  print ("Before last file:  ", before_last)
+  print ("Last file:         ", last)
+
+  print(before_last_csv)
+  print(last_csv)
+
+#  if (before_last_csv == last_csv):
+#    print("they are the same")
+#  else:
+#    print("they are different")
+
 
 # Iniciar Programa
 def main():
   save_CSV(read_spreadsheet(extract_ID()))
+  check_for_duplicates()
 
 
 #
