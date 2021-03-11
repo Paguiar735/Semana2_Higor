@@ -55,41 +55,63 @@ def save_CSV(df):
 
 # Update Database
 def update_file():
-  print("Hello World!")
+
+  #a = check_for_duplicates()
+  #if a == 1:
+
+  dir = os.path.join(os.getcwd(), "Planilhas")
+  os.chdir(dir)
+  files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
+
+  before_last = files[-2]
+  A = pd.read_csv(os.path.join(dir, before_last))
+  last = files[-1]
+  B = pd.read_csv(os.path.join(dir, last))
+
+  print(A)
+  print(B)
+  
+  print(set(B) - set(A))
+
+
 
 # Check for duplicate files
 def check_for_duplicates():
   
   dir = os.path.join(os.getcwd(), "Planilhas")
-
   os.chdir(dir)
   files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
 
-  if files[-1] != "1-FILE.csv": # condicao para rodar a primeira vez sem sondar o                                     # diretorio vazio
+  if files[-1] != "1-FILE.csv": 
 
     before_last = files[-2]
     before_last_csv = str(pd.read_csv(os.path.join(dir, before_last)))
     last = files[-1]
     last_csv = str(pd.read_csv(os.path.join(dir, last)))
 
-    print ("Before last file:  ", before_last)
-    print ("Last file:         ", last)
-    print("")
 
     if (before_last_csv == last_csv):
-      print("they are the same")
+      x = 0
       os.remove(last)
+      # new file is a duplicate and won't be saved
+
     else:
-      print("they are different")
-      print("")
-      print("changes saved as ",last)
+      x = 1
+      # new file will proceed to the next function
+  
+  else:
+    x = 0
+  
+  print("etapa 1")
+  return x # (1 = yes, 0 = no)
+
+
 
 
 # Iniciar Programa
 def main():
   save_CSV(read_spreadsheet(extract_ID()))
-  check_for_duplicates()
-
+  #update_file(check_for_duplicates())
 
 #
 ##
@@ -101,13 +123,14 @@ def main():
 ##
 #
 
-main()
+#main()
+update_file()
 
 # 1 - (x) SALVAR OS ARQUIVOS CSV EM UMA PASTA, NÃO NO MESMO DIRETÓRIO DO ARQUIVO PYTHON
 # 2 - (x) SE ESTIVER COM O MESMO NOME, NÃO SOBRESCREVER, E SIM SALVAR COM OUTRO NOME (PLANILHA_1 -- > PLANILHA_2)
-# 3 - ( ) CRIAR UMA FUNÇÃO PARA DETECTAR SE O ARQUIVO DE ÍNDICE N+1, GERADO NA ÚLTIMA EXECUÇÃO, É INDÊNTICO AO ARQUIVO DE ÍNDICE N, ATRAVÉS DA FUNÇÃO check_for_duplicates().
+# 3 - (x) CRIAR UMA FUNÇÃO PARA DETECTAR SE O ARQUIVO DE ÍNDICE N+1, GERADO NA ÚLTIMA EXECUÇÃO, É INDÊNTICO AO ARQUIVO DE ÍNDICE N, ATRAVÉS DA FUNÇÃO check_for_duplicates().
 # 4 - ( ) CRIAR UMA FUNÇÃO update_file() PARA ATUAR EM DOIS ARQUIVOS, UM DE ÍNDICE N E OUTRO DE ÍNDICE N+1, QUE TENHA O SEGUINTE COMPORTAMENTO:
-#  4-1 ( ) SE O ARQUIVO DE ÍNDICE N+1 FOR IDÊNTICO AO ARQUIVO DE ÍNDICE N, DELETAR O ARQUIVO DE ÍNDICE N+1
+#  4-1 (x) SE O ARQUIVO DE ÍNDICE N+1 FOR IDÊNTICO AO ARQUIVO DE ÍNDICE N, DELETAR O ARQUIVO DE ÍNDICE N+1
 #  4-2 ( ) SE HOUVER ALTERAÇÕES, SALVAR TAIS ALTERAÇÕES EM UM ARQUIVO DE TEXTO SEGUNDO O MODELO:
 #    - Current version: [...]
 #    - Latest version:  [...]
