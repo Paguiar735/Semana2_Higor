@@ -10,6 +10,7 @@
 
 import os
 import pandas as pd
+import csv
 
 #
 ##
@@ -64,14 +65,91 @@ def update_file():
   files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
 
   before_last = files[-2]
-  A = pd.read_csv(os.path.join(dir, before_last))
   last = files[-1]
-  B = pd.read_csv(os.path.join(dir, last))
 
-  print(A)
-  print(B)
+  #A = pd.read_csv(os.path.join(dir, before_last))
+  #B = pd.read_csv(os.path.join(dir, last))
+
+  # A e B são os arquivos csv lidos com Pandas
+  # usar print(A ou B) para imprimir a tabela csv completa
+
+  with open(os.path.join(dir, before_last)) as BFL_csv:
+    B = list(csv.reader(BFL_csv))
+
+  with open(os.path.join(dir, last)) as L_csv:
+    A = list(csv.reader(L_csv))
+
+  alist = []
+  blist = []
+
+  # Inicio das Condições
+  if (B[0][1]) != (A[0][1]):
+    alist.append(A[0][0])
+    alist.append(A[0][1])
+    blist.append(B[0][0])
+    blist.append(B[0][1])
+  if (B[1][1]) != (A[1][1]):
+    alist.append(A[1][0])
+    alist.append(A[1][1])
+    blist.append(B[1][0])
+    blist.append(B[1][1])
+  if (B[2][1]) != (A[2][1]):
+    alist.append(A[2][0])
+    alist.append(A[2][1])
+    blist.append(B[2][0])
+    blist.append(B[2][1])
+  if (B[3][1]) != (A[3][1]):
+    alist.append(A[3][0])
+    alist.append(A[3][1])
+    blist.append(B[3][0])
+    blist.append(B[3][1])
+  if (B[4][1]) != (A[4][1]):
+    alist.append(A[4][0])
+    alist.append(A[4][1])
+    blist.append(B[4][0])
+    blist.append(B[4][1])
+  if (B[5][1]) != (A[5][1]):
+    alist.append(A[5][0])
+    alist.append(A[5][1])
+    blist.append(B[5][0])
+    blist.append(B[5][1])
+  if (B[6][1]) != (A[6][1]):
+    alist.append(A[6][0])
+    alist.append(A[6][1])
+    blist.append(B[6][0])
+    blist.append(B[6][1])
+  if (B[7][1]) != (A[7][1]):
+    alist.append(A[7][0])
+    alist.append(A[7][1])
+    blist.append(B[7][0])
+    blist.append(B[7][1])
+  if (B[8][1]) != (A[8][1]):
+    alist.append(A[8][0])
+    alist.append(A[8][1])
+    blist.append(B[8][0])
+    blist.append(B[8][1])
+  if (B[9][1]) != (A[9][1]):
+    alist.append(A[9][0])
+    alist.append(A[9][1])
+    blist.append(B[9][0])
+    blist.append(B[9][1])
+
+
+  print("Antigo:")
+  print("")
+  n = 0
+  while n < len(alist):
+    print(alist[n], alist[n+1])
+    n = n+2
   
-  print(set(B) - set(A))
+  print("")
+  print("Novo:")
+  print("")
+  m = 0
+  while m < len(blist):
+    print(blist[m], blist[m+1])
+    m = m+2
+    
 
 
 
@@ -111,7 +189,7 @@ def check_for_duplicates():
 # Iniciar Programa
 def main():
   save_CSV(read_spreadsheet(extract_ID()))
-  #update_file(check_for_duplicates())
+  check_for_duplicates()
 
 #
 ##
@@ -123,8 +201,16 @@ def main():
 ##
 #
 
+x = int(input("main (1) or update (0): "))
+print("")
+if x == 1:
+  main()
+else:
+  update_file()
+
+
 #main()
-update_file()
+#update_file()
 
 # 1 - (x) SALVAR OS ARQUIVOS CSV EM UMA PASTA, NÃO NO MESMO DIRETÓRIO DO ARQUIVO PYTHON
 # 2 - (x) SE ESTIVER COM O MESMO NOME, NÃO SOBRESCREVER, E SIM SALVAR COM OUTRO NOME (PLANILHA_1 -- > PLANILHA_2)
