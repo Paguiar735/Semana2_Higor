@@ -63,15 +63,15 @@ def get_two_CSV_files():
 
 # Return symmetric difference between two DataFrames
 def dataframe_difference(df1, df2):
-    comparison_df = df1.merge(df2, indicator=True, how='outer')
-    first_only_df = comparison_df[comparison_df['_merge'] == 'right_only']
-    second_only_df = comparison_df[comparison_df['_merge'] == 'left_only']
-    first_only_df = first_only_df.reset_index(drop=True)
-    second_only_df = second_only_df.reset_index(drop=True)
-    del first_only_df['_merge']
-    del second_only_df['_merge']
-    c = pd.DataFrame.equals(first_only_df, second_only_df)
-    return first_only_df, second_only_df, c
+  comparison_df = df1.merge(df2, indicator=True, how='outer')
+  first_only_df = comparison_df[comparison_df['_merge'] == 'right_only']
+  second_only_df = comparison_df[comparison_df['_merge'] == 'left_only']
+  first_only_df = first_only_df.reset_index(drop=True)
+  second_only_df = second_only_df.reset_index(drop=True)
+  del first_only_df['_merge']
+  del second_only_df['_merge']
+  c = pd.DataFrame.equals(first_only_df, second_only_df)
+  return first_only_df, second_only_df, c
 
 # Print difference between Dataframes A and B
 def print_df_differences(A, B):
@@ -91,12 +91,11 @@ def update_file(A, B, A_name, B_name, c):
       os.remove(os.path.join(dir, B_name))
     elif c == '2':
       os.remove(os.path.join(dir, A_name))
-      os.rename(os.path.join(dir, B_name), A_name)
+      os.rename(os.path.join(dir, B_name), os.path.join(dir, A_name))
     else:
       print("\n---> Valor inválido!")
     if (c == '1') or (c == '2'):
       break
-    
 
 # Check for duplicate files
 def check_for_duplicates(A, B, A_name, B_name, c):
@@ -112,8 +111,23 @@ def update_database():
 
 # Iniciar Programa
 def main():
-  #save_CSV(read_spreadsheet(extract_ID()))
+  save_CSV(read_spreadsheet(extract_ID()))
   update_database()
+
+def menu():
+  print("---[ Início do Programa ]---")
+  print("\n\n\n(1) main()\n(2) update_file()")
+  x = str(input("\n---> Escolha uma função a ser executada: "))
+  if x == '1':
+    main()
+    print("\n----> Função {} executada com sucesso.".format("main()"))
+  elif x == '2':
+    print("\n")
+    update_database()
+    print("\n\n---> Função {} executada com sucesso.".format("update_database()"))
+  else:
+    print("\n---> Valor inválido!")
+  print("\n\n\n---[ Fim do Programa ]---")
 
 #
 ##
@@ -125,7 +139,7 @@ def main():
 ##
 #
 
-main()
+menu()
 
 # 1 - (x) SALVAR OS ARQUIVOS CSV EM UMA PASTA, NÃO NO MESMO DIRETÓRIO DO ARQUIVO PYTHON
 # 2 - (x) SE ESTIVER COM O MESMO NOME, NÃO SOBRESCREVER, E SIM SALVAR COM OUTRO NOME (PLANILHA_1 -- > PLANILHA_2)
@@ -135,21 +149,4 @@ main()
 #  4-2 (X) SE HOUVER ALTERAÇÕES, SALVAR TAIS ALTERAÇÕES EM UM ARQUIVO DE TEXTO SEGUNDO O MODELO:
 #    - Current version: [...]
 #    - Latest version:  [...]
-#  4-3 (X) CRIAR UMA FUNÇÃO PARA EXIBIR CONTEÚDO DO ARQUIVOD E TEXTO E PERGUNTAR SE O USUÁRIO DESEJA SALVAR A VERSÃO MAIS NOVAS OU DESCARTÁ-LA. 
-
-'''
-def menu():
-  print("---[ Início do Programa ]---")
-  print("\n\n\n(1) main()\n(2) update_file()")
-  x = str(input("\n---> Escolha uma função a ser executada: "))
-  if x == '1':
-    main()
-    print("\n----> Função {} executada com sucesso.".format("main()"))
-  elif x == '2':
-    print("\n")
-    update_file()
-    print("\n\n---> Função {} executada com sucesso.".format("update_file()"))
-  else:
-    print("\n---> Valor inválido!")
-  print("\n\n\n---[ Fim do Programa ]---")
-'''
+#  4-3 (X) CRIAR UMA FUNÇÃO PARA EXIBIR CONTEÚDO DO ARQUIVOD E TEXTO E PERGUNTAR SE O USUÁRIO DESEJA SALVAR A VERSÃO MAIS NOVAS OU DESCARTÁ-LA.
