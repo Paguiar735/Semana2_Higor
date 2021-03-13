@@ -54,13 +54,13 @@ def save_CSV(df):
   completeName = os.path.join(save_path, str(a) + "-FILE" + ".csv")
   df.to_csv (completeName, index = False, header=True)
 
-# Get two last CSV files
+# Get last two CSV files and their Names
 def get_two_CSV_files():
   dir = os.path.join(os.getcwd(), "Planilhas")
   files = sorted(os.listdir(dir))
   last_df = pd.read_csv(os.path.join(dir, files[-1]))
   second_last_df = pd.read_csv(os.path.join(dir, files[-2]))
-  return last_df, second_last_df
+  return last_df, second_last_df, files[-2], files[-1]
 
 # Return symmetric difference between two DataFrames
 def dataframe_difference(df1, df2):
@@ -71,7 +71,8 @@ def dataframe_difference(df1, df2):
     second_only_df = second_only_df.reset_index(drop=True)
     del first_only_df['_merge']
     del second_only_df['_merge']
-    return first_only_df, second_only_df
+    c = pd.DataFrame.equals(first_only_df, second_only_df)
+    return first_only_df, second_only_df, c
 
 # Print difference between Dataframes A and B
 def print_df_differences(A, B):
@@ -83,21 +84,23 @@ def print_df_differences(A, B):
 
 # Update Database
 def update_file():
+  print("Hello World!")
 
-  #a = check_for_duplicates()
-  #if a == 1
+# Check for duplicated files
+def check_for_duplicates(A, B, A_name, B_name, c):
+  if c == True:
+    os.remove(os.path.join(os.getcwd(), "Planilhas", B_name))
+  else:
+    print_df_differences(A, B)
+    update_file()
 
-  A, B = get_two_CSV_files()
-  A, B = dataframe_difference(A, B)
-  print_df_differences(A, B)
+def update_database():
+  A, B, A_name, B_name = get_two_CSV_files()
+  A, B, c = dataframe_difference(A, B)
+  check_for_duplicates(A, B, A_name, B_name, c)
 
-# Check for duplicate files
-def check_for_duplicates():
-  
-  dir = os.path.join(os.getcwd(), "Planilhas")
-  os.chdir(dir)
-  files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
 
+'''
   if files[-1] != "1-FILE.csv":
 
     before_last = files[-2]
@@ -117,7 +120,9 @@ def check_for_duplicates():
   
   else:
     x = 0
+
   return x # (1 = yes, 0 = no)
+'''
 
 def menu():
   print("---[ Início do Programa ]---")
@@ -136,8 +141,8 @@ def menu():
 
 # Iniciar Programa
 def main():
-  save_CSV(read_spreadsheet(extract_ID()))
-  check_for_duplicates()
+  #save_CSV(read_spreadsheet(extract_ID()))
+  update_database()
 
 #
 ##
@@ -149,7 +154,8 @@ def main():
 ##
 #
 
-update_file()
+main()
+#update_file()
 #menu()
 
 
