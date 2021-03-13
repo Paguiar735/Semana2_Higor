@@ -10,7 +10,6 @@
 
 import os
 import pandas as pd
-#import io
 
 #
 ##
@@ -76,68 +75,40 @@ def dataframe_difference(df1, df2):
 
 # Print difference between Dataframes A and B
 def print_df_differences(A, B):
-  print("---> Antigo:\n")
+  print("---> 1. Versão do Banco de Dados:\n")
   print(A)
-  print("\n---> Novo:\n")
+  print("\n---> 2. Versão Recentemente Inserida:\n")
   print(B)
   print("\n--> Obs.: NaN significa que a célula está vazia.")
 
 # Update Database
-def update_file():
-  print("Hello World!")
+def update_file(A, B, A_name, B_name, c):
+  print_df_differences(A, B)
+  dir = os.path.join(os.getcwd(), "Planilhas")
+  while True:
+    c = str(input("\n---> Qual versão deseja manter? (1 ou 2): "))
+    if c == '1':
+      os.remove(os.path.join(dir, B_name))
+    elif c == '2':
+      os.remove(os.path.join(dir, A_name))
+      os.rename(os.path.join(dir, B_name), A_name)
+    else:
+      print("\n---> Valor inválido!")
+    if (c == '1') or (c == '2'):
+      break
+    
 
-# Check for duplicated files
+# Check for duplicate files
 def check_for_duplicates(A, B, A_name, B_name, c):
   if c == True:
     os.remove(os.path.join(os.getcwd(), "Planilhas", B_name))
   else:
-    print_df_differences(A, B)
-    update_file()
+    update_file(A, B, A_name, B_name, c)
 
 def update_database():
   A, B, A_name, B_name = get_two_CSV_files()
   A, B, c = dataframe_difference(A, B)
   check_for_duplicates(A, B, A_name, B_name, c)
-
-
-'''
-  if files[-1] != "1-FILE.csv":
-
-    before_last = files[-2]
-    before_last_csv = str(pd.read_csv(os.path.join(dir, before_last)))
-    last = files[-1]
-    last_csv = str(pd.read_csv(os.path.join(dir, last)))
-
-
-    if (before_last_csv == last_csv):
-      x = 0
-      os.remove(last)
-      # new file is a duplicate and won't be saved
-
-    else:
-      x = 1
-      # new file will proceed to the next function
-  
-  else:
-    x = 0
-
-  return x # (1 = yes, 0 = no)
-'''
-
-def menu():
-  print("---[ Início do Programa ]---")
-  print("\n\n\n(1) main()\n(2) update_file()")
-  x = str(input("\n---> Escolha uma função a ser executada: "))
-  if x == '1':
-    main()
-    print("\n----> Função {} executada com sucesso.".format("main()"))
-  elif x == '2':
-    print("\n")
-    update_file()
-    print("\n\n---> Função {} executada com sucesso.".format("update_file()"))
-  else:
-    print("\n---> Valor inválido!")
-  print("\n\n\n---[ Fim do Programa ]---")
 
 # Iniciar Programa
 def main():
@@ -155,16 +126,30 @@ def main():
 #
 
 main()
-#update_file()
-#menu()
-
 
 # 1 - (x) SALVAR OS ARQUIVOS CSV EM UMA PASTA, NÃO NO MESMO DIRETÓRIO DO ARQUIVO PYTHON
 # 2 - (x) SE ESTIVER COM O MESMO NOME, NÃO SOBRESCREVER, E SIM SALVAR COM OUTRO NOME (PLANILHA_1 -- > PLANILHA_2)
 # 3 - (x) CRIAR UMA FUNÇÃO PARA DETECTAR SE O ARQUIVO DE ÍNDICE N+1, GERADO NA ÚLTIMA EXECUÇÃO, É INDÊNTICO AO ARQUIVO DE ÍNDICE N, ATRAVÉS DA FUNÇÃO check_for_duplicates().
-# 4 - ( ) CRIAR UMA FUNÇÃO update_file() PARA ATUAR EM DOIS ARQUIVOS, UM DE ÍNDICE N E OUTRO DE ÍNDICE N+1, QUE TENHA O SEGUINTE COMPORTAMENTO:
+# 4 - (X) CRIAR UMA FUNÇÃO update_file() PARA ATUAR EM DOIS ARQUIVOS, UM DE ÍNDICE N E OUTRO DE ÍNDICE N+1, QUE TENHA O SEGUINTE COMPORTAMENTO:
 #  4-1 (x) SE O ARQUIVO DE ÍNDICE N+1 FOR IDÊNTICO AO ARQUIVO DE ÍNDICE N, DELETAR O ARQUIVO DE ÍNDICE N+1
-#  4-2 ( ) SE HOUVER ALTERAÇÕES, SALVAR TAIS ALTERAÇÕES EM UM ARQUIVO DE TEXTO SEGUNDO O MODELO:
+#  4-2 (X) SE HOUVER ALTERAÇÕES, SALVAR TAIS ALTERAÇÕES EM UM ARQUIVO DE TEXTO SEGUNDO O MODELO:
 #    - Current version: [...]
 #    - Latest version:  [...]
-#  4-3 ( ) CRIAR UMA FUNÇÃO PARA EXIBIR CONTEÚDO DO ARQUIVOD E TEXTO E PERGUNTAR SE O USUÁRIO DESEJA SALVAR A VERSÃO MAIS NOVAS OU DESCARTÁ-LA. 
+#  4-3 (X) CRIAR UMA FUNÇÃO PARA EXIBIR CONTEÚDO DO ARQUIVOD E TEXTO E PERGUNTAR SE O USUÁRIO DESEJA SALVAR A VERSÃO MAIS NOVAS OU DESCARTÁ-LA. 
+
+'''
+def menu():
+  print("---[ Início do Programa ]---")
+  print("\n\n\n(1) main()\n(2) update_file()")
+  x = str(input("\n---> Escolha uma função a ser executada: "))
+  if x == '1':
+    main()
+    print("\n----> Função {} executada com sucesso.".format("main()"))
+  elif x == '2':
+    print("\n")
+    update_file()
+    print("\n\n---> Função {} executada com sucesso.".format("update_file()"))
+  else:
+    print("\n---> Valor inválido!")
+  print("\n\n\n---[ Fim do Programa ]---")
+'''
