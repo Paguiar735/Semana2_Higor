@@ -10,7 +10,7 @@
 
 import os
 import pandas as pd
-import csv
+#import io
 
 #
 ##
@@ -22,23 +22,23 @@ import csv
 ##
 #
 
-# Extrair ID da planilha
+# Extract spreadsheet ID
 def extract_ID():
   #URL = input("Insert Public Spreadsheet URL: ")
   URL = "https://docs.google.com/spreadsheets/d/1QtqGEaQuipX9Z1DSc97zCnxxOF-ggkTRrRg7e4ih8c4/edit#gid=0"
   return URL.split('/')[-2]
 
-# Ler a Planilha
+# Read spreadsheet
 def read_spreadsheet(sheet_id):
   return pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
 
-# Criar Diretório
+# Create folder
 def make_dir(a):
   dir = os.path.join(os.getcwd(), a)
   if not os.path.exists(dir):
       os.mkdir(dir)
 
-# Encontrar último Índice
+# Find last index
 def get_last_index():
   dir = os.path.join(os.getcwd(), "Planilhas")
   a = 1
@@ -46,7 +46,7 @@ def get_last_index():
     a = int(a) + 1
   return a
 
-# Salvar CSV
+# Save CSV
 def save_CSV(df):
   make_dir("Planilhas")
   a = get_last_index()
@@ -54,104 +54,42 @@ def save_CSV(df):
   completeName = os.path.join(save_path, str(a) + "-FILE" + ".csv")
   df.to_csv (completeName, index = False, header=True)
 
+# Get two last CSV files
+def get_two_CSV_files():
+  dir = os.path.join(os.getcwd(), "Planilhas")
+  files = sorted(os.listdir(dir))
+  last_df = pd.read_csv(os.path.join(dir, files[-1]))
+  second_last_df = pd.read_csv(os.path.join(dir, files[-2]))
+  return last_df, second_last_df
+
+# Return symmetric difference between two DataFrames
+def dataframe_difference(df1, df2):
+    comparison_df = df1.merge(df2, indicator=True, how='outer')
+    first_only_df = comparison_df[comparison_df['_merge'] == 'right_only']
+    second_only_df = comparison_df[comparison_df['_merge'] == 'left_only']
+    first_only_df = first_only_df.reset_index(drop=True)
+    second_only_df = second_only_df.reset_index(drop=True)
+    del first_only_df['_merge']
+    del second_only_df['_merge']
+    return first_only_df, second_only_df
+
+# Print difference between Dataframes A and B
+def print_df_differences(A, B):
+  print("---> Antigo:\n")
+  print(A)
+  print("\n---> Novo:\n")
+  print(B)
+  print("\n--> Obs.: NaN significa que a célula está vazia.")
+
 # Update Database
 def update_file():
 
   #a = check_for_duplicates()
-  #if a == 1:
+  #if a == 1
 
-  dir = os.path.join(os.getcwd(), "Planilhas")
-  os.chdir(dir)
-  files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
-
-  before_last = files[-2]
-  last = files[-1]
-
-  #A = pd.read_csv(os.path.join(dir, before_last))
-  #B = pd.read_csv(os.path.join(dir, last))
-
-  # A e B são os arquivos csv lidos com Pandas
-  # usar print(A ou B) para imprimir a tabela csv completa
-
-  with open(os.path.join(dir, before_last)) as BFL_csv:
-    B = list(csv.reader(BFL_csv))
-
-  with open(os.path.join(dir, last)) as L_csv:
-    A = list(csv.reader(L_csv))
-
-  alist = []
-  blist = []
-
-  # Inicio das Condições
-  if (B[0][1]) != (A[0][1]):
-    alist.append(A[0][0])
-    alist.append(A[0][1])
-    blist.append(B[0][0])
-    blist.append(B[0][1])
-  if (B[1][1]) != (A[1][1]):
-    alist.append(A[1][0])
-    alist.append(A[1][1])
-    blist.append(B[1][0])
-    blist.append(B[1][1])
-  if (B[2][1]) != (A[2][1]):
-    alist.append(A[2][0])
-    alist.append(A[2][1])
-    blist.append(B[2][0])
-    blist.append(B[2][1])
-  if (B[3][1]) != (A[3][1]):
-    alist.append(A[3][0])
-    alist.append(A[3][1])
-    blist.append(B[3][0])
-    blist.append(B[3][1])
-  if (B[4][1]) != (A[4][1]):
-    alist.append(A[4][0])
-    alist.append(A[4][1])
-    blist.append(B[4][0])
-    blist.append(B[4][1])
-  if (B[5][1]) != (A[5][1]):
-    alist.append(A[5][0])
-    alist.append(A[5][1])
-    blist.append(B[5][0])
-    blist.append(B[5][1])
-  if (B[6][1]) != (A[6][1]):
-    alist.append(A[6][0])
-    alist.append(A[6][1])
-    blist.append(B[6][0])
-    blist.append(B[6][1])
-  if (B[7][1]) != (A[7][1]):
-    alist.append(A[7][0])
-    alist.append(A[7][1])
-    blist.append(B[7][0])
-    blist.append(B[7][1])
-  if (B[8][1]) != (A[8][1]):
-    alist.append(A[8][0])
-    alist.append(A[8][1])
-    blist.append(B[8][0])
-    blist.append(B[8][1])
-  if (B[9][1]) != (A[9][1]):
-    alist.append(A[9][0])
-    alist.append(A[9][1])
-    blist.append(B[9][0])
-    blist.append(B[9][1])
-
-
-  print("Antigo:")
-  print("")
-  n = 0
-  while n < len(alist):
-    print(alist[n], alist[n+1])
-    n = n+2
-  
-  print("")
-  print("Novo:")
-  print("")
-  m = 0
-  while m < len(blist):
-    print(blist[m], blist[m+1])
-    m = m+2
-    
-
-
+  A, B = get_two_CSV_files()
+  A, B = dataframe_difference(A, B)
+  print_df_differences(A, B)
 
 # Check for duplicate files
 def check_for_duplicates():
@@ -160,7 +98,7 @@ def check_for_duplicates():
   os.chdir(dir)
   files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
 
-  if files[-1] != "1-FILE.csv": 
+  if files[-1] != "1-FILE.csv":
 
     before_last = files[-2]
     before_last_csv = str(pd.read_csv(os.path.join(dir, before_last)))
@@ -179,12 +117,22 @@ def check_for_duplicates():
   
   else:
     x = 0
-  
-  print("etapa 1")
   return x # (1 = yes, 0 = no)
 
-
-
+def menu():
+  print("---[ Início do Programa ]---")
+  print("\n\n\n(1) main()\n(2) update_file()")
+  x = str(input("\n---> Escolha uma função a ser executada: "))
+  if x == '1':
+    main()
+    print("\n----> Função {} executada com sucesso.".format("main()"))
+  elif x == '2':
+    print("\n")
+    update_file()
+    print("\n\n---> Função {} executada com sucesso.".format("update_file()"))
+  else:
+    print("\n---> Valor inválido!")
+  print("\n\n\n---[ Fim do Programa ]---")
 
 # Iniciar Programa
 def main():
@@ -201,16 +149,9 @@ def main():
 ##
 #
 
-x = int(input("main (1) or update (0): "))
-print("")
-if x == 1:
-  main()
-else:
-  update_file()
+update_file()
+#menu()
 
-
-#main()
-#update_file()
 
 # 1 - (x) SALVAR OS ARQUIVOS CSV EM UMA PASTA, NÃO NO MESMO DIRETÓRIO DO ARQUIVO PYTHON
 # 2 - (x) SE ESTIVER COM O MESMO NOME, NÃO SOBRESCREVER, E SIM SALVAR COM OUTRO NOME (PLANILHA_1 -- > PLANILHA_2)
